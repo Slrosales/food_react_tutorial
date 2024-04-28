@@ -1,0 +1,20 @@
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+/* Select all the tags*/
+*{
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18;
+}
+
+body {
+  margin: 0;
+  font-family: Quicksand, 'sans-serif';
+}
+
+a {
+  text-decoration: none;
+}
