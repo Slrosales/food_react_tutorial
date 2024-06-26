@@ -66,7 +66,7 @@ export const sample_foods = [
     tags: ["FastFood", "Pizza", "Lunch"],
   },
 ];
-/*
+
 export const sample_tags = [
   { name: "All", count: 6 },
   { name: "FastFood", count: 4 },
@@ -96,4 +96,3 @@ export const sample_users = [
     isAdmin: true,
   },
 ];
-*/
