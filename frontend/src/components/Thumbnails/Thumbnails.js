@@ -17,7 +17,7 @@ export default function Thumbails({ foods }) {
             {/* Muestra la imagen de la comida */}
             <img
               className={classes.image}
-              src={`/foods/${food.imageUrl}`}
+              src={`${food.imageUrl}`}
               alt={food.name}
             />
 

@@ -1,32 +1,36 @@
 // Importa el módulo Router de express para crear manejadores de rutas
 import { Router } from "express";
-// Importa un conjunto de datos de ejemplo de usuarios
-import { sample_users } from "../data.js";
 // Importa jwt para la creación de tokens JWT (JSON Web Tokens)
 import jwt from "jsonwebtoken";
 // Importa un código de estado HTTP para respuestas de solicitud incorrecta
 import { BAD_REQUEST } from "../constants/httpStatus.js";
 
+import handler from "express-async-handler"; // Importa express-async-handler para manejar promesas en rutas de Express
+import { UserModel } from "../models/user.model.js"; // Importa el modelo de usuario para interactuar con la base de datos
+import bcrypt from "bcryptjs"; // Importa bcryptjs para hashear y comparar contraseñas
+
 // Crea una nueva instancia de Router
 const router = Router();
 
 // Define una ruta POST para el login de usuarios
-router.post("/login", (req, res) => {
-  // Extrae email y password del cuerpo de la solicitud
-  const { email, password } = req.body;
-  // Busca un usuario en la lista de usuarios de ejemplo que coincida con el email y password proporcionados
-  const user = sample_users.find(
-    (user) => user.email === email && user.password === password
-  );
-  // Si se encuentra un usuario, genera y envía una respuesta con el token JWT
-  if (user) {
-    res.send(generateTokenResponse(user));
-    return;
-  }
+router.post(
+  "/login",
+  handler(async (req, res) => {
+    // Extrae email y password del cuerpo de la solicitud
+    const { email, password } = req.body;
+    // Busca un usuario en la base de datos que coincida con el email proporcionado
+    const user = await UserModel.findOne({ email });
 
-  // Si no se encuentra un usuario, envía una respuesta con estado 400 y un mensaje de error
-  res.status(BAD_REQUEST).send("Username or password invalid");
-});
+    // Si se encuentra un usuario y la contraseña coincide, genera y envía una respuesta con el token JWT
+    if (user && (await bcrypt.compare(password, user.password))) {
+      res.send(generateTokenResponse(user));
+      return;
+    }
+
+    // Si no se encuentra un usuario o la contraseña no coincide, envía una respuesta con estado 400 y un mensaje de error
+    res.status(BAD_REQUEST).send("Username or password invalid");
+  })
+);
 
 // Función para generar una respuesta con un token JWT para un usuario
 const generateTokenResponse = (user) => {
@@ -37,7 +41,7 @@ const generateTokenResponse = (user) => {
       email: user.email,
       isAdmin: user.isAdmin,
     },
-    "SomeRandomText", // Clave secreta para la firma del token, en un entorno real debe ser una cadena segura y privada
+    process.env.JWT_SECRET, // Clave secreta para la firma del token, almacenada en variables de entorno
     {
       expiresIn: "30d", // Establece la expiración del token a 30 días
     }
@@ -53,4 +57,4 @@ const generateTokenResponse = (user) => {
   };
 };
 
-export default router;
+export default router; // Exporta el router para ser utilizado en otras partes de la aplicación

@@ -41,7 +41,7 @@ export default function FoodPage() {
           {/* Imagen de la comida */}
           <img
             className={classes.image}
-            src={`/foods/${food.imageUrl}`}
+            src={`${food.imageUrl}`}
             alt={food.name}
           />
 
