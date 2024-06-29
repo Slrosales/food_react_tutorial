@@ -3,7 +3,7 @@ import express from "express";
 // Importa cors, un paquete de Node.js para habilitar CORS (Cross-Origin Resource Sharing)
 import cors from "cors";
 // Importa foodRouter, un módulo que contiene rutas para la entidad "foods"
-import foodRouter from "./routers/food.routers.js";
+import foodRouter from "./routers/food.router.js";
 // Importa userRouter, un módulo que contiene rutas para la entidad "users"
 import userRouter from "./routers/user.router.js";
 

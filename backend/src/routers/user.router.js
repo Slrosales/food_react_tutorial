@@ -1,11 +1,11 @@
 // Importa el módulo Router de express para crear manejadores de rutas
 import { Router } from "express";
 // Importa un conjunto de datos de ejemplo de usuarios
-import { sample_users } from "../data";
+import { sample_users } from "../data.js";
 // Importa jwt para la creación de tokens JWT (JSON Web Tokens)
 import jwt from "jsonwebtoken";
 // Importa un código de estado HTTP para respuestas de solicitud incorrecta
-import { BAD_REQUEST } from "../constants/httpStatus";
+import { BAD_REQUEST } from "../constants/httpStatus.js";
 
 // Crea una nueva instancia de Router
 const router = Router();
@@ -52,3 +52,5 @@ const generateTokenResponse = (user) => {
     token,
   };
 };
+
+export default router;
