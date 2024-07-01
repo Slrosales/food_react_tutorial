@@ -18,6 +18,12 @@ export const login = async (email, password) => {
   return data;
 };
 
+export const register = async (registerData) => {
+  const { data } = await axios.post("api/users/register", registerData);
+  localStorage.setItem("user", JSON.stringify(data));
+  return data;
+};
+
 // Define y exporta la función logout para cerrar sesión
 export const logout = () => {
   // Elimina el usuario de localStorage, efectivamente cerrando la sesión

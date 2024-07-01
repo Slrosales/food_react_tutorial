@@ -1,7 +1,7 @@
 // Importa React y hooks necesarios de varias librerías
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form"; // Para manejar formularios
-import { useNavigate, useSearchParams } from "react-router-dom"; // Para navegación y manejo de parámetros de URL
+import { useNavigate, useSearchParams, Link } from "react-router-dom"; // Para navegación y manejo de parámetros de URL
 import { useAuth } from "../../hooks/useAuth"; // Hook personalizado para autenticación
 import classes from "./loginPage.module.css"; // Estilos específicos de la página de inicio de sesión
 import Title from "../../components/Title/Title"; // Componente para mostrar títulos
@@ -69,6 +69,12 @@ export default function LoginPage() {
           />
           {/* Botón de envío */}
           <Button type="submit" text="Login" />
+          <div className={classes.register}>
+            New user? &nbsp;
+            <Link to={`/register${returnUrl ? "?returnUrl=" + returnUrl : ""}`}>
+              Register Here
+            </Link>
+          </div>
         </form>
       </div>
     </div>

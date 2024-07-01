@@ -12,6 +12,8 @@ import bcrypt from "bcryptjs"; // Importa bcryptjs para hashear y comparar contr
 // Crea una nueva instancia de Router
 const router = Router();
 
+const PASSWORD_HASH_SALT_ROUNDS = 10; // Define la cantidad de rondas para el algoritmo de salting de bcrypt
+
 // Define una ruta POST para el login de usuarios
 router.post(
   "/login",
@@ -32,6 +34,39 @@ router.post(
   })
 );
 
+router.post(
+  "/register",
+  handler(async (req, res) => {
+    // Extrae los datos del usuario desde el cuerpo de la solicitud
+    const { name, email, password, address } = req.body;
+
+    // Busca en la base de datos si ya existe un usuario con el email proporcionado
+    const user = await UserModel.findOne({ email });
+
+    // Si el usuario ya existe, devuelve un error indicando que el usuario ya existe
+    if (user) {
+      res.status(BAD_REQUEST).send("User already exists, please login!");
+      return;
+    }
+
+    // Si el usuario no existe, hashea la contraseña proporcionada usando bcrypt
+    const hashPassword = await bcrypt.hash(password, PASSWORD_HASH_SALT_ROUNDS);
+
+    // Crea un nuevo objeto de usuario con los datos proporcionados y la contraseña hasheada
+    const newUser = {
+      name,
+      email: email.toLowerCase(), // Convierte el email a minúsculas para evitar duplicados por diferencia de mayúsculas/minúsculas
+      password: hashPassword,
+      address,
+    };
+
+    // Crea el nuevo usuario en la base de datos
+    const result = await UserModel.create(newUser);
+
+    // Genera un token JWT para el nuevo usuario y lo devuelve en la respuesta
+    res.send(generateTokenResponse(result));
+  })
+);
 // Función para generar una respuesta con un token JWT para un usuario
 const generateTokenResponse = (user) => {
   // Crea un token JWT con la información del usuario y una clave secreta

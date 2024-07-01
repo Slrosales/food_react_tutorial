@@ -28,6 +28,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Define la función register para registrar nuevos usuarios
+  const register = async (data) => {
+    try {
+      // Intenta registrar al usuario con los datos proporcionados
+      const user = await userService.register(data);
+      // Si el registro es exitoso, actualiza el estado del usuario
+      setUser(user);
+      // Muestra un mensaje de éxito
+      toast.success("Register Successful");
+    } catch (err) {
+      // En caso de error, muestra un mensaje de error
+      toast.error(err.response.data);
+    }
+  };
+
   // Define la función logout para cerrar sesión
   const logout = () => {
     // Llama a la función de cierre de sesión de userService
@@ -38,9 +53,9 @@ export const AuthProvider = ({ children }) => {
     toast.success("Logout Successful");
   };
 
-  // Renderiza el proveedor del contexto AuthContext, pasando el usuario actual, login y logout como valores
+  // Renderiza el proveedor del contexto AuthContext, pasando el usuario actual, login, logout y register como valores
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
